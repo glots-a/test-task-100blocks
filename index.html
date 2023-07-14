@@ -129,14 +129,19 @@
       wrapper.addEventListener('click', function (e) {
         const firstElement = wrapper.firstElementChild;
         const container = e.target.closest('.container');
-
+                      
         if (container) {
           const cubeElement = wrapper.querySelector(`div[data-number="${container.dataset.number}"]`);
-          console.log(cubeElement);
-          
+                    
           if (cubeElement.classList.contains('active')) {
             const nextIndex = Number(container.dataset.number) + 1;
             const nextCubeElement = wrapper.querySelector(`div[data-number="${nextIndex}"]`);
+
+            if (container.dataset.number === '100') {
+              wrapper.insertAdjacentElement("beforeend", container)
+              cubeElement.classList.remove('active');
+              return;
+            }
 
             if (nextCubeElement) {
               wrapper.insertBefore(container, nextCubeElement);
