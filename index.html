@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./cube.png" rel="icon" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>glots.andrii.publ@gmail.com</title>
+  <style>
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      width: 100px;
+      height: 100px;
+      margin: 25px 0 0 25px;
+      
+      perspective: 500px;
+      perspective-origin: 50% -75px;
+    }
+
+    .cube {
+      transform-style: preserve-3d;
+      animation: cube-rotate 8s infinite ease;
+    }
+
+    .cube .edge {
+      cursor: pointer;
+      display: block;
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+      font-size: 40px;
+      color: rgb(0, 0, 0);
+      text-align: center;
+      backface-visibility: visible;
+      border: 1px solid black;
+      transition: background-color 1s, opacity 0.3s;
+    }
+    
+    .cube:hover .edge{
+      background-color: rgb(189, 239, 239);
+      opacity: 0.3;
+    }
+
+    .front {
+      transform: translateZ(50px);
+    }
+
+    .back {
+      transform: rotateY(180deg) translateZ(50px);
+    }
+
+    .top {
+      transform: rotateX(90deg) translateZ(50px);
+    }
+
+    .bottom {
+      transform: rotateX(-90deg) translateZ(50px);
+    }
+
+    .left {
+      transform: rotateY(-90deg) translateZ(50px);
+    }
+
+    .right {
+      transform: rotateY(90deg) translateZ(50px);
+    }
+
+     @keyframes cube-rotate {
+      0% {
+        transform: rotateY(0);
+      }
+      100% {
+        transform: rotateY(360deg);
+      }
+    }
+
+    .active .edge {
+      border: 3px solid rgb(243, 126, 17);
+    }
+  </style>
+</head>
+<!-- HTML -->
+  <body>
+    <main class="wrapper">
+    </main>
+
+    <!-- Java Script -->
+
+    <script>
+      const wrapper = document.querySelector('.wrapper');    
+
+      class Cube {
+        constructor(cubeNumber) {
+          this.cubeNumber = cubeNumber;
+          this.cubeElement = this.makeCube(this.cubeNumber);
+        }
+
+        makeCube(n) {
+          const cubeHtml = `
+              <div class="container" data-number="${n}">
+                <div class="cube" style="animation-delay: ${Math.random() * 3 + 1}s">
+                  <div class="front edge">${n}</div>
+                  <div class="back edge">${n}</div>
+                  <div class="top edge">${n}</div>
+                  <div class="bottom edge">${n}</div>
+                  <div class="left edge">${n}</div>
+                  <div class="right edge">${n}</div>
+                </div>
+              </div>
+            `;
+          return cubeHtml;
+        }
+      }
+
+      function putHtmlLayout() {
+        for (let i = 1; i <= 100; i++) {
+          const cube = new Cube(i);
+          wrapper.insertAdjacentHTML('beforeend', cube.cubeElement);
+        }
+      }
+
+      putHtmlLayout();
+
+      wrapper.addEventListener('click', function (e) {
+        const firstElement = wrapper.firstElementChild;
+        const container = e.target.closest('.container');
+
+        if (container) {
+          const cubeElement = wrapper.querySelector(`div[data-number="${container.dataset.number}"]`);
+          console.log(cubeElement);
+          
+          if (cubeElement.classList.contains('active')) {
+            const nextIndex = Number(container.dataset.number) + 1;
+            const nextCubeElement = wrapper.querySelector(`div[data-number="${nextIndex}"]`);
+
+            if (nextCubeElement) {
+              wrapper.insertBefore(container, nextCubeElement);
+              cubeElement.classList.remove('active');
+            }
+          } else {
+             wrapper.insertBefore(cubeElement, firstElement);
+            cubeElement.classList.add('active');
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
