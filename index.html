@@ -132,7 +132,6 @@
 
         if (container) {
           const cubeElement = wrapper.querySelector(`div[data-number="${container.dataset.number}"]`);
-          console.log(cubeElement);
           
           if (cubeElement.classList.contains('active')) {
             const nextIndex = Number(container.dataset.number) + 1;
